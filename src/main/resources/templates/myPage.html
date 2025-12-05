@@ -1,0 +1,113 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - SooBeen</title>
+    <link rel="stylesheet" th:href="@{/styles/globals.css}">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-top-content">
+                <a th:href="@{/orderList}">주문배송</a>
+                <span>|</span>
+                <a href="#">고객센터</a>
+            </div>
+        </div>
+        <div class="header-main">
+            <a th:href="@{/}" class="logo">SooBeen</a>
+            <div class="search-bar">
+                <input type="text" placeholder="통합검색">
+                <button type="button">검색</button>
+            </div>
+            <nav class="header-nav">
+                <a th:href="@{/cart}">장바구니</a>
+                <a th:href="@{/myPage}">마이페이지</a>
+                <a th:if="${user_id == null}" th:href="@{/login}">로그인</a>
+                <a th:if="${user_id != null}" th:href="@{/logout}">로그아웃</a>
+            </nav>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-menu-content">
+                <a th:href="@{/}">홈</a>
+                <a href="#">베스트</a>
+                <a href="#">신상품</a>
+                <a href="#">이벤트</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="container" style="padding: 40px 20px;">
+        <h1 class="section-title">마이페이지</h1>
+
+        <!-- 사용자 정보 카드 -->
+        <div class="card" style="padding: 30px; margin-bottom: 30px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 24px;">회원정보</h2>
+            <div class="table">
+                <table>
+                    <tr>
+                        <td style="width: 150px; background-color: var(--bg-light); font-weight: 500;">이름</td>
+                        <td th:text="${user.getName()}">사용자 이름</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: var(--bg-light); font-weight: 500;">이메일</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: var(--bg-light); font-weight: 500;">주소</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: var(--bg-light); font-weight: 500;">카드</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 나의 설정 메뉴 -->
+        <div class="card" style="padding: 30px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 24px;">나의 설정</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <a th:href="@{/address}" class="card" style="padding: 24px; text-align: center; transition: all 0.2s;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">📍</div>
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">나의 주소</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary);">배송지 관리</p>
+                </a>
+                <a th:href="@{/card}" class="card" style="padding: 24px; text-align: center; transition: all 0.2s;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">💳</div>
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">나의 카드</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary);">결제수단 관리</p>
+                </a>
+                <a th:href="@{/memberInformation}" class="card" style="padding: 24px; text-align: center; transition: all 0.2s;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">👤</div>
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">회원정보</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary);">개인정보 수정</p>
+                </a>
+                <a th:href="@{/coupon}" class="card" style="padding: 24px; text-align: center; transition: all 0.2s;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🎫</div>
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">쿠폰함</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary);">할인쿠폰 관리</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 주문 내역 링크 -->
+        <div style="text-align: center; margin-top: 30px;">
+            <a th:href="@{/orderList}" class="btn btn-outline btn-lg">주문 내역 보기</a>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-bottom">
+                <p>© 2025 SooBeen Book Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

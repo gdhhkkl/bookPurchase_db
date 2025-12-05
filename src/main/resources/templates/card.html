@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 카드 - SooBeen</title>
+    <link rel="stylesheet" th:href="@{/styles/globals.css}">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-top-content">
+                <a th:href="@{/orderList}">주문배송</a>
+                <span>|</span>
+                <a href="#">고객센터</a>
+            </div>
+        </div>
+        <div class="header-main">
+            <a th:href="@{/}" class="logo">SooBeen</a>
+            <div class="search-bar">
+                <input type="text" placeholder="통합검색">
+                <button type="button">검색</button>
+            </div>
+            <nav class="header-nav">
+                <a th:href="@{/cart}">장바구니</a>
+                <a th:href="@{/myPage}">마이페이지</a>
+                <a th:if="${user_id == null}" th:href="@{/login}">로그인</a>
+                <a th:if="${user_id != null}" th:href="@{/logout}">로그아웃</a>
+            </nav>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-menu-content">
+                <a th:href="@{/}">홈</a>
+                <a href="#">베스트</a>
+                <a href="#">신상품</a>
+                <a href="#">이벤트</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="container" style="padding: 40px 20px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 30px;">
+            <a th:href="@{/myPage}" class="btn btn-outline btn-sm">← 이전</a>
+            <h1 class="section-title" style="margin: 0;">나의 카드</h1>
+        </div>
+
+        <div class="card" style="padding: 30px; max-width: 600px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 24px;">새 카드 등록</h2>
+            <form action="/card" method="post">
+                <div class="form-group">
+                    <label class="form-label">카드번호</label>
+                    <input name="cardNumber" type="text" class="form-input" placeholder="카드번호를 입력하세요 (예: 1234-5678-9012-3456)" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">유효기간</label>
+                    <input name="cardDate" type="text" class="form-input" placeholder="유효기간을 입력하세요 (예: MM/YY)" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">카드종류</label>
+                    <input name="cardType" type="text" class="form-input" placeholder="카드종류를 입력하세요 (예: 신용카드, 체크카드)" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">등록</button>
+            </form>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a th:href="@{/cardd}" class="btn btn-outline">등록된 카드 보기</a>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-bottom">
+                <p>© 2025 SooBeen Book Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

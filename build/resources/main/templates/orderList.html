@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문배송 - SooBeen</title>
+    <link rel="stylesheet" th:href="@{/styles/globals.css}">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-top-content">
+                <a th:href="@{/orderList}">주문배송</a>
+                <span>|</span>
+                <a href="#">고객센터</a>
+            </div>
+        </div>
+        <div class="header-main">
+            <a th:href="@{/}" class="logo">SooBeen</a>
+            <div class="search-bar">
+                <input type="text" placeholder="통합검색">
+                <button type="button">검색</button>
+            </div>
+            <nav class="header-nav">
+                <a th:href="@{/cart}">장바구니</a>
+                <a th:href="@{/myPage}">마이페이지</a>
+                <a th:if="${user_id == null}" th:href="@{/login}">로그인</a>
+                <a th:if="${user_id != null}" th:href="@{/logout}">로그아웃</a>
+            </nav>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-menu-content">
+                <a th:href="@{/}">홈</a>
+                <a href="#">베스트</a>
+                <a href="#">신상품</a>
+                <a href="#">이벤트</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="container" style="padding: 40px 20px;">
+        <h1 class="section-title">주문배송</h1>
+
+        <!-- 주문 내역 리스트 -->
+        <div th:if="${order != null && !order.isEmpty()}">
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">주문번호</th>
+                                <th style="width: 10%;">수령인</th>
+                                <th style="width: 25%;">주문상품</th>
+                                <th style="width: 12%;">주문금액</th>
+                                <th style="width: 10%;">주문수량</th>
+                                <th style="width: 20%;">주소</th>
+                                <th style="width: 13%;">카드</th>
+                                <th style="width: 10%;">삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="orders : ${order}">
+                                <td>
+                                    <strong th:text="${orders.order.order_id}">주문번호</strong>
+                                </td>
+                                <td th:text="${user.name}">수령인</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 60px; height: 80px; border-radius: 4px; overflow: hidden; flex-shrink: 0;">
+                                            <img th:src="${orders.getBook().imageUrl != null ? orders.getBook().imageUrl : 'https://via.placeholder.com/60x80?text=Cover'}" 
+                                                 th:alt="${orders.getBook().title}" 
+                                                 style="width: 100%; height: 100%; object-fit: cover;" 
+                                                 onerror="this.src='https://via.placeholder.com/60x80?text=Cover'">
+                                        </div>
+                                        <div>
+                                            <strong th:text="${orders.getBook().title}">책 제목</strong>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong style="color: var(--primary-color);" th:text="${#numbers.formatDecimal(orders.book_total_price, 0, 'COMMA', 0, 'POINT') + '원'}">가격</strong>
+                                </td>
+                                <td>
+                                    <div style="text-align: center;" th:text="${orders.book_total_count + '권'}">수량</div>
+                                </td>
+                                <td th:text="${orders.getOrder().basicAddress}">주소</td>
+                                <td th:text="${orders.getOrder().card_number}">카드</td>
+                                <td>
+                                    <form action="/orderDelete" method="post" style="display: inline;">
+                                        <input type="hidden" name="orderID" th:value="${orders.getOrderList_id()}">
+                                        <button type="submit" class="btn btn-outline btn-sm">삭제</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 주문 내역이 없을 때 -->
+        <div th:if="${order == null || order.isEmpty()}" class="card" style="padding: 60px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
+            <h2 style="font-size: 24px; margin-bottom: 12px; color: var(--text-secondary);">주문 내역이 없습니다</h2>
+            <p style="color: var(--text-light); margin-bottom: 30px;">책을 주문해보세요</p>
+            <a th:href="@{/}" class="btn btn-primary">쇼핑하러 가기</a>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-bottom">
+                <p>© 2025 SooBeen Book Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

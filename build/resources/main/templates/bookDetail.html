@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${bookD.title + ' - SooBeen'}">책 상세 - SooBeen</title>
+    <link rel="stylesheet" th:href="@{/styles/globals.css}">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-top-content">
+                <a th:href="@{/orderList}">주문배송</a>
+                <span>|</span>
+                <a href="#">고객센터</a>
+            </div>
+        </div>
+        <div class="header-main">
+            <a th:href="@{/}" class="logo">SooBeen</a>
+            <div class="search-bar">
+                <input type="text" placeholder="통합검색">
+                <button type="button">검색</button>
+            </div>
+            <nav class="header-nav">
+                <a th:href="@{/cart}">장바구니</a>
+                <a th:href="@{/myPage}">마이페이지</a>
+                <a th:if="${user_id == null}" th:href="@{/login}">로그인</a>
+                <a th:if="${user_id != null}" th:href="@{/logout}">로그아웃</a>
+            </nav>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-menu-content">
+                <a th:href="@{/}">홈</a>
+                <a href="#">베스트</a>
+                <a href="#">신상품</a>
+                <a href="#">이벤트</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="container" style="padding: 40px 20px;">
+        <div class="flex gap-3" style="flex-wrap: wrap;">
+            <!-- 책 이미지 영역 -->
+            <div style="flex: 0 0 300px; max-width: 300px;">
+                <div class="card">
+                    <div class="card-img" style="height: 400px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img th:src="${bookD.imageUrl != null ? bookD.imageUrl : 'https://via.placeholder.com/300x400?text=Book+Cover'}" 
+                             th:alt="${bookD.title}" 
+                             style="width: 100%; height: 100%; object-fit: cover;" 
+                             onerror="this.src='https://via.placeholder.com/300x400?text=Book+Cover'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 책 정보 영역 -->
+            <div style="flex: 1; min-width: 300px;">
+                <div class="card" style="padding: 30px;">
+                    <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 16px; color: var(--text-primary);" th:text="${bookD.title}">책 제목</h1>
+                    <p style="font-size: 18px; color: var(--text-secondary); margin-bottom: 24px;" th:text="${'저자: ' + bookD.writer}">저자</p>
+                    
+                    <div style="padding: 20px; background-color: var(--bg-light); border-radius: 8px; margin-bottom: 24px;">
+                        <div class="price-highlight" th:text="${#numbers.formatDecimal(bookD.price, 0, 'COMMA', 0, 'POINT') + '원'}">가격</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">수량</label>
+                        <div class="quantity-control">
+                            <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="bookCount" class="quantity-input" name="count" min="1" value="1" onchange="copyValue(); setCount()"/>
+                            <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 30px;">
+                        <form action="/cart" method="post" style="flex: 1;">
+                            <input type="hidden" name="book_number" th:value="${bookD.book_number}">
+                            <input type="hidden" name="count" id="cartCount" value="1">
+                            <button type="submit" class="btn btn-outline btn-lg" style="width: 100%;">장바구니 담기</button>
+                        </form>
+                        <form action="/orderNow" method="get" style="flex: 1;">
+                            <input type="hidden" name="book_number" th:value="${bookD.book_number}">
+                            <input type="hidden" name="bookCount" id="hiddenCount" value="1">
+                            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">바로구매</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 책 설명 -->
+                <div class="card" style="margin-top: 24px; padding: 30px;">
+                    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">책 소개</h2>
+                    <p style="line-height: 1.8; color: var(--text-secondary);" th:text="${bookD.content}">책 내용 설명</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-bottom">
+                <p>© 2025 SooBeen Book Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        function copyValue(){
+            const count = document.getElementById("bookCount").value;
+            console.log("bookCount", count);
+            document.getElementById("hiddenCount").value = Number(count);
+            document.getElementById("cartCount").value = Number(count);
+        }
+
+        function setCount() {
+            document.cookie = "count" + "=" + document.getElementById("hiddenCount").value;
+        }
+
+        function increaseQuantity() {
+            const input = document.getElementById("bookCount");
+            const currentValue = parseInt(input.value) || 1;
+            input.value = currentValue + 1;
+            copyValue();
+            setCount();
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById("bookCount");
+            const currentValue = parseInt(input.value) || 1;
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+                copyValue();
+                setCount();
+            }
+        }
+    </script>
+</body>
+</html>
